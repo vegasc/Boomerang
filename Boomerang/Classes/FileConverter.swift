@@ -32,7 +32,7 @@ class FileConverter {
         // Setup output path
         guard let directory = FileManager.default.urls(for: .documentDirectory,
                                                        in: .userDomainMask).first else { complition(nil); return }
-        let videoOutputPath = directory.appendingPathComponent(name + ".mp4")
+        let videoOutputPath = directory.appendingPathComponent(name + ".mov")
         
         // remove file if it's already exists
         if FileManager.default.fileExists(atPath: videoOutputPath.path) {
@@ -63,7 +63,7 @@ class FileConverter {
         // Convert images to CGImage’s
         var buffer:CVPixelBuffer? = nil
         var frameCount:UInt = 0
-        let frameDuration = fps * 6
+        let frameDuration = fps * 1
         
         // if cgImage is nil frame will be ignored which leads to missing frames
         for img in images {
@@ -73,10 +73,14 @@ class FileConverter {
             var isAppend = false
             var j = 0
             while(!isAppend && j < 30) {
-                guard adaptor.assetWriterInput.isReadyForMoreMediaData else { continue }
-                let frameTime = CMTime(value: CMTimeValue(frameCount * frameDuration), timescale: CMTimeScale(fps))
-                guard buffer != nil else { complition(nil); return }
-                isAppend = adaptor.append(buffer!, withPresentationTime: frameTime)
+                if adaptor.assetWriterInput.isReadyForMoreMediaData {
+                    guard adaptor.assetWriterInput.isReadyForMoreMediaData else { continue }
+                    let frameTime = CMTime(value: CMTimeValue(frameCount * frameDuration), timescale: __int32_t(fps))
+                    guard buffer != nil else { complition(nil); return }
+                    isAppend = adaptor.append(buffer!, withPresentationTime: frameTime)
+                } else {
+                    Thread.sleep(forTimeInterval: 0.1)
+                }
                 j += 1
             }
             frameCount += 1
@@ -84,46 +88,48 @@ class FileConverter {
         
         // Finish AVAssetWriter session
         assetWriterInput.markAsFinished()
-        videoWriter?.finishWriting {}
-        
-        // Export file with AVAssetExportSession
-        // create outup file
-        let videoOutputFileUrl = URL(fileURLWithPath: videoOutputPath.path)
-        let outputFilePath = directory.appendingPathComponent(name + ".mp4")
-        let outputFileUrl = URL(fileURLWithPath: outputFilePath.path)
-//        if FileManager.default.fileExists(atPath: outputFileUrl.path) {
-//            try? FileManager.default.removeItem(atPath: outputFileUrl.path)
-//        }
-        
-        // create asset
-        let videoAsset = AVURLAsset(url: videoOutputFileUrl)
-        let mixComposition = AVMutableComposition()
-        let compositionTrack = mixComposition.addMutableTrack(withMediaType: .video, preferredTrackID: kCMPersistentTrackID_Invalid)
-        try? compositionTrack?.insertTimeRange(CMTimeRangeMake(kCMTimeZero,videoAsset.duration),
-                                          of: videoAsset.tracks(withMediaType: .video).first!,
-                                          at: kCMTimeZero)
-        
-        // export asset
-        let assetExport = AVAssetExportSession(asset: mixComposition, presetName: AVAssetExportPresetHighestQuality)
-        assetExport?.outputFileType = AVFileType.mp4
-        assetExport?.outputURL = outputFileUrl
-        assetExport?.exportAsynchronously(completionHandler: {
-            complition(outputFileUrl)
-        })
+        videoWriter?.finishWriting {
+            
+            // Export file with AVAssetExportSession
+            // create outup file
+            let videoOutputFileUrl = URL(fileURLWithPath: videoOutputPath.path)
+            let outputFilePath = directory.appendingPathComponent(name + ".mov")
+            let outputFileUrl = URL(fileURLWithPath: outputFilePath.path)
+            //        if FileManager.default.fileExists(atPath: outputFileUrl.path) {
+            //            try? FileManager.default.removeItem(atPath: outputFileUrl.path)
+            //        }
+            
+            // create asset
+            let videoAsset = AVURLAsset(url: videoOutputFileUrl)
+            let mixComposition = AVMutableComposition()
+            let compositionTrack = mixComposition.addMutableTrack(withMediaType: .video, preferredTrackID: kCMPersistentTrackID_Invalid)
+            try? compositionTrack?.insertTimeRange(CMTimeRangeMake(kCMTimeZero,videoAsset.duration),
+                                                   of: videoAsset.tracks(withMediaType: .video).first!,
+                                                   at: kCMTimeZero)
+            
+            // export asset
+            let assetExport = AVAssetExportSession(asset: mixComposition, presetName: AVAssetExportPresetHighestQuality)
+            assetExport?.outputFileType = AVFileType.mov
+            assetExport?.outputURL = outputFileUrl
+            assetExport?.exportAsynchronously(completionHandler: {
+                complition(outputFileUrl)
+            })
+            
+        }
     }
     
     static func pixelBufferFromCGImage(ref:CGImage, size:CGSize) -> CVPixelBuffer? {
         let options = [
             kCVPixelBufferCGImageCompatibilityKey : true,
-            kCVPixelBufferCGBitmapContextCompatibilityKey : true
-        ] as NSDictionary
+            kCVPixelBufferCGBitmapContextCompatibilityKey : true,
+        ] as CFDictionary
         
         var buffer:CVPixelBuffer? = nil
         let status = CVPixelBufferCreate(kCFAllocatorDefault,
                                          Int(size.width),
                                          Int(size.height),
                                          kCVPixelFormatType_32ARGB,
-                                         options as CFDictionary,
+                                         options,
                                          &buffer)
         guard status == kCVReturnSuccess else { return nil }
         
@@ -144,14 +150,6 @@ class FileConverter {
         
         CVPixelBufferUnlockBaseAddress(buffer!, CVPixelBufferLockFlags(rawValue: 0))
         return buffer!
-        
-//        let context = CGBitmapContextCreate(bufferData,
-//                                             Int(size.width),
-//                                             Int(size.height),
-//                                             8,
-//                                             4 * Int(size.width),
-//                                             rgbColorSpace,
-//                                             <#T##bitmapInfo: UInt32##UInt32#>)
     }
 }
 
