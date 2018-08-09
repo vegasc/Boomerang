@@ -17,7 +17,7 @@ class FileConverter {
     Converts images array into mov file.
     When convertion complited it saves file at documents directory and returns url to the file.
     */
-    static func convertImagesToMovie(name:String, images:[UIImage], size:CGSize, fps:UInt) {
+    static func convertImagesToMovie(name:String, images:[UIImage], size:CGSize, fps:UInt) -> URL? {
         // steps to convert
         // 1. Setup output path
         // 2. Setup AVAssetWriter
@@ -27,7 +27,7 @@ class FileConverter {
         
         // Setup output path
         guard let directory = FileManager.default.urls(for: .documentDirectory,
-                                                       in: .userDomainMask).first else { return }
+                                                       in: .userDomainMask).first else { return nil }
         let videoOutputPath = directory.appendingPathComponent(name)
         
         // remove file if it's already exists
@@ -39,7 +39,7 @@ class FileConverter {
         var videoWriter:AVAssetWriter? = nil
         do {
             videoWriter = try AVAssetWriter(outputURL: videoOutputPath, fileType: .mov)
-        } catch { return }
+        } catch { return nil }
         
         let videoSettings: [String : Any] = [
             AVVideoCodecKey : AVVideoCodecType.h264,
@@ -58,14 +58,30 @@ class FileConverter {
         
         // Convert images to CGImage’s
         var buffer:CVPixelBuffer? = nil
-        var frameCount = 0
-        var frameDuration = fps * 6
+        let frameCount:UInt = 0
+        let frameDuration = fps * 6
         
         // if cgImage is nil frame will be ignored which leads to missing frames
         for img in images {
             guard img.cgImage != nil else { continue }
             buffer = pixelBufferFromCGImage(ref: img.cgImage!, size: size)
+            
+            var isAppend = false
+            var j = 0
+            while(!isAppend && j < 30) {
+                guard adaptor.assetWriterInput.isReadyForMoreMediaData else { continue }
+                let frameTime = CMTime(value: CMTimeValue(frameCount * frameDuration), timescale: CMTimeScale(fps))
+                guard buffer != nil else { return nil }
+                isAppend = adaptor.append(buffer!, withPresentationTime: frameTime)
+                j += 1
+            }
         }
+        
+        // Finish AVAssetWriter session
+        assetWriterInput.markAsFinished()
+        videoWriter?.finishWriting {}
+        
+        return videoOutputPath
     }
     
     static func pixelBufferFromCGImage(ref:CGImage, size:CGSize) -> CVPixelBuffer? {
