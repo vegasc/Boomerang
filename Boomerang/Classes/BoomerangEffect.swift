@@ -11,6 +11,9 @@ import Foundation
 import AVFoundation
 
 class BoomerangEffect {
+    /**
+     Returns frames array with boomerang effect
+     */
     static func createBoomerangFrom(videoUrl:URL) -> [UIImage]? {
         // get image frame from video
         let getFrame:(_ fromTime:Float64, _ generator:AVAssetImageGenerator) -> UIImage? = { time, generator in
@@ -43,9 +46,6 @@ class BoomerangEffect {
         
         // append reversed frames
         frames.append(contentsOf: frames.reversed())
-        
-        // convert to video
-        
         return frames
     }
     

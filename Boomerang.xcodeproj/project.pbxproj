@@ -17,6 +17,7 @@
 		0408EB63211C2F480066B9F3 /* VideoPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0408EB62211C2F480066B9F3 /* VideoPlayerView.swift */; };
 		0408EB65211C358A0066B9F3 /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0408EB64211C358A0066B9F3 /* Photos.framework */; };
 		0423E438211C56E3007F2B34 /* BoomerangEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0423E437211C56E3007F2B34 /* BoomerangEffect.swift */; };
+		048D6B5B211C67F900C8CA41 /* FileConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 048D6B5A211C67F900C8CA41 /* FileConverter.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +33,7 @@
 		0408EB62211C2F480066B9F3 /* VideoPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayerView.swift; sourceTree = "<group>"; };
 		0408EB64211C358A0066B9F3 /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = System/Library/Frameworks/Photos.framework; sourceTree = SDKROOT; };
 		0423E437211C56E3007F2B34 /* BoomerangEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoomerangEffect.swift; sourceTree = "<group>"; };
+		048D6B5A211C67F900C8CA41 /* FileConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileConverter.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -117,6 +119,7 @@
 			isa = PBXGroup;
 			children = (
 				0423E437211C56E3007F2B34 /* BoomerangEffect.swift */,
+				048D6B5A211C67F900C8CA41 /* FileConverter.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -197,6 +200,7 @@
 				0408EB47211C24220066B9F3 /* AppDelegate.swift in Sources */,
 				0408EB63211C2F480066B9F3 /* VideoPlayerView.swift in Sources */,
 				0423E438211C56E3007F2B34 /* BoomerangEffect.swift in Sources */,
+				048D6B5B211C67F900C8CA41 /* FileConverter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
