@@ -12,11 +12,11 @@ import AVKit
 class VideoPlayerView: UIView {
     
     // MARK: UI
+    var playerLayer = AVPlayerLayer()
     /**
      Uses as background video playback behind blurView
      */
     var playerLayerBlur = AVPlayerLayer()
-    var playerLayer = AVPlayerLayer()
     
     // MARK: Proporties
     var player = AVPlayer()
@@ -58,7 +58,6 @@ extension VideoPlayerView {
         blurView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 0).isActive = true
         blurView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 0).isActive = true
         blurView.rightAnchor.constraint(equalTo: self.rightAnchor, constant: 0).isActive = true
-        blurView.alpha = 1.0
         
         playerLayer.player = self.player
         layer.addSublayer(playerLayer)

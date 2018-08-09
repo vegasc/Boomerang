@@ -16,6 +16,7 @@
 		0408EB60211C2ED30066B9F3 /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0408EB5F211C2ED30066B9F3 /* AVKit.framework */; };
 		0408EB63211C2F480066B9F3 /* VideoPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0408EB62211C2F480066B9F3 /* VideoPlayerView.swift */; };
 		0408EB65211C358A0066B9F3 /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0408EB64211C358A0066B9F3 /* Photos.framework */; };
+		0423E438211C56E3007F2B34 /* BoomerangEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0423E437211C56E3007F2B34 /* BoomerangEffect.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,7 @@
 		0408EB5F211C2ED30066B9F3 /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = System/Library/Frameworks/AVKit.framework; sourceTree = SDKROOT; };
 		0408EB62211C2F480066B9F3 /* VideoPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayerView.swift; sourceTree = "<group>"; };
 		0408EB64211C358A0066B9F3 /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = System/Library/Frameworks/Photos.framework; sourceTree = SDKROOT; };
+		0423E437211C56E3007F2B34 /* BoomerangEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoomerangEffect.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,6 +70,7 @@
 				0408EB46211C24220066B9F3 /* AppDelegate.swift */,
 				0408EB58211C25710066B9F3 /* ViewControllerts */,
 				0408EB61211C2F350066B9F3 /* Views */,
+				0423E436211C56CA007F2B34 /* Classes */,
 				0408EB4D211C24220066B9F3 /* Assets.xcassets */,
 				0408EB4F211C24220066B9F3 /* LaunchScreen.storyboard */,
 				0408EB52211C24220066B9F3 /* Info.plist */,
@@ -108,6 +111,14 @@
 				0408EB62211C2F480066B9F3 /* VideoPlayerView.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		0423E436211C56CA007F2B34 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				0423E437211C56E3007F2B34 /* BoomerangEffect.swift */,
+			);
+			path = Classes;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -185,6 +196,7 @@
 				0408EB5B211C25970066B9F3 /* MainView.swift in Sources */,
 				0408EB47211C24220066B9F3 /* AppDelegate.swift in Sources */,
 				0408EB63211C2F480066B9F3 /* VideoPlayerView.swift in Sources */,
+				0423E438211C56E3007F2B34 /* BoomerangEffect.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
