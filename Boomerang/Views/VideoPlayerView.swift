@@ -12,9 +12,6 @@ import AVKit
 class VideoPlayerView: UIView {
     
     // MARK: UI
-    lazy var blurView: UIView = {
-        return UIVisualEffectView(effect: UIBlurEffect(style: .light))
-    }()
     /**
      Uses as background video playback behind blurView
      */
@@ -54,6 +51,7 @@ extension VideoPlayerView {
         playerLayerBlur.videoGravity = .resizeAspectFill
         layer.addSublayer(playerLayerBlur)
         
+        let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .light))
         self.addSubview(blurView)
         blurView.translatesAutoresizingMaskIntoConstraints = false
         blurView.topAnchor.constraint(equalTo: self.topAnchor, constant: 0).isActive = true
