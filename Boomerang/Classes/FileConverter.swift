@@ -17,7 +17,11 @@ class FileConverter {
     Converts images array into mov file.
     When convertion complited it saves file at documents directory and returns url to the file.
     */
-    static func convertImagesToMovie(name:String, images:[UIImage], size:CGSize, fps:UInt) -> URL? {
+    static func convertImagesToMovie(name:String,
+                                     images:[UIImage],
+                                     size:CGSize,
+                                     fps:UInt,
+                                     complition:@escaping (_ url:URL?) -> Void) {
         // steps to convert
         // 1. Setup output path
         // 2. Setup AVAssetWriter
@@ -27,8 +31,8 @@ class FileConverter {
         
         // Setup output path
         guard let directory = FileManager.default.urls(for: .documentDirectory,
-                                                       in: .userDomainMask).first else { return nil }
-        let videoOutputPath = directory.appendingPathComponent(name)
+                                                       in: .userDomainMask).first else { complition(nil); return }
+        let videoOutputPath = directory.appendingPathComponent(name + ".mp4")
         
         // remove file if it's already exists
         if FileManager.default.fileExists(atPath: videoOutputPath.path) {
@@ -39,7 +43,7 @@ class FileConverter {
         var videoWriter:AVAssetWriter? = nil
         do {
             videoWriter = try AVAssetWriter(outputURL: videoOutputPath, fileType: .mov)
-        } catch { return nil }
+        } catch { complition(nil); return }
         
         let videoSettings: [String : Any] = [
             AVVideoCodecKey : AVVideoCodecType.h264,
@@ -58,7 +62,7 @@ class FileConverter {
         
         // Convert images to CGImage’s
         var buffer:CVPixelBuffer? = nil
-        let frameCount:UInt = 0
+        var frameCount:UInt = 0
         let frameDuration = fps * 6
         
         // if cgImage is nil frame will be ignored which leads to missing frames
@@ -71,17 +75,41 @@ class FileConverter {
             while(!isAppend && j < 30) {
                 guard adaptor.assetWriterInput.isReadyForMoreMediaData else { continue }
                 let frameTime = CMTime(value: CMTimeValue(frameCount * frameDuration), timescale: CMTimeScale(fps))
-                guard buffer != nil else { return nil }
+                guard buffer != nil else { complition(nil); return }
                 isAppend = adaptor.append(buffer!, withPresentationTime: frameTime)
                 j += 1
             }
+            frameCount += 1
         }
         
         // Finish AVAssetWriter session
         assetWriterInput.markAsFinished()
         videoWriter?.finishWriting {}
         
-        return videoOutputPath
+        // Export file with AVAssetExportSession
+        // create outup file
+        let videoOutputFileUrl = URL(fileURLWithPath: videoOutputPath.path)
+        let outputFilePath = directory.appendingPathComponent(name + ".mp4")
+        let outputFileUrl = URL(fileURLWithPath: outputFilePath.path)
+//        if FileManager.default.fileExists(atPath: outputFileUrl.path) {
+//            try? FileManager.default.removeItem(atPath: outputFileUrl.path)
+//        }
+        
+        // create asset
+        let videoAsset = AVURLAsset(url: videoOutputFileUrl)
+        let mixComposition = AVMutableComposition()
+        let compositionTrack = mixComposition.addMutableTrack(withMediaType: .video, preferredTrackID: kCMPersistentTrackID_Invalid)
+        try? compositionTrack?.insertTimeRange(CMTimeRangeMake(kCMTimeZero,videoAsset.duration),
+                                          of: videoAsset.tracks(withMediaType: .video).first!,
+                                          at: kCMTimeZero)
+        
+        // export asset
+        let assetExport = AVAssetExportSession(asset: mixComposition, presetName: AVAssetExportPresetHighestQuality)
+        assetExport?.outputFileType = AVFileType.mp4
+        assetExport?.outputURL = outputFileUrl
+        assetExport?.exportAsynchronously(completionHandler: {
+            complition(outputFileUrl)
+        })
     }
     
     static func pixelBufferFromCGImage(ref:CGImage, size:CGSize) -> CVPixelBuffer? {
