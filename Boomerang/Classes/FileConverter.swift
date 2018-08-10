@@ -63,12 +63,13 @@ class FileConverter {
         // Convert images to CGImage’s
         var buffer:CVPixelBuffer? = nil
         var frameCount:UInt = 0
-        let frameDuration = fps * 1
+        let frameDuration:UInt = 5
         
         // if cgImage is nil frame will be ignored which leads to missing frames
         for img in images {
             guard img.cgImage != nil else { continue }
-            buffer = pixelBufferFromCGImage(ref: img.cgImage!, size: size)
+            // TODO: Apply correct value
+            buffer = pixelBufferFromCGImage(ref: img.cgImage!, size: CGSize(width: 464, height: 848))
             
             var isAppend = false
             var j = 0
@@ -133,7 +134,7 @@ class FileConverter {
                                          &buffer)
         guard status == kCVReturnSuccess else { return nil }
         
-        CVPixelBufferUnlockBaseAddress(buffer!, CVPixelBufferLockFlags(rawValue: 0))
+        CVPixelBufferLockBaseAddress(buffer!, CVPixelBufferLockFlags(rawValue: 0))
         let bufferData = CVPixelBufferGetBaseAddress(buffer!)
         let rgbColorSpace = CGColorSpaceCreateDeviceRGB()
         let context = CGContext(data: bufferData,
@@ -149,6 +150,7 @@ class FileConverter {
         context!.draw(ref, in: CGRect.init(x: 0, y: 0, width: ref.width, height: ref.height))
         
         CVPixelBufferUnlockBaseAddress(buffer!, CVPixelBufferLockFlags(rawValue: 0))
+        
         return buffer!
     }
 }
