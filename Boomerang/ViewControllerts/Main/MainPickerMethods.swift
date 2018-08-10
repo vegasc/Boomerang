@@ -25,6 +25,7 @@ extension MainViewController: UINavigationControllerDelegate, UIImagePickerContr
                                                    size: videoPlayer.bounds.size,
                                                    fps: 30) { url in
                                                     if url != nil {
+                                                        self.originalUrl = videoUrl
                                                         self.videoPlayer.setVideo(withUrl: url!)
                                                     }
                 }

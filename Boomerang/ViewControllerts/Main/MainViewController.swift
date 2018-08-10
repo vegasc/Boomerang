@@ -11,12 +11,20 @@ import Photos
 
 class MainViewController: UIViewController {
     
+    enum Speeds: Int {
+        case min = 20
+        case middle = 30
+        case high = 50
+    }
+    
     // MARK: UI
     let videoPlayer = VideoPlayerView()
+    let speedControl = UISegmentedControl()
     
     // MARK: Properties
     var imagePicker = UIImagePickerController()
-    var speed = 30
+    var speed = Speeds.middle // boomerang speed
+    var originalUrl:URL? // url to the original video file
 
     // MARK: Lifecycle funcs
     override func viewDidLoad() {
@@ -46,6 +54,24 @@ class MainViewController: UIViewController {
         }
     }
     
+    @objc func updateSpeedValue() {
+        switch speedControl.selectedSegmentIndex {
+        case 0:
+            speed = Speeds.min
+            break
+        case 1:
+            speed = Speeds.middle
+            break
+        case 2:
+            speed = Speeds.high
+            break
+        default:
+            speed = Speeds.middle
+            break
+        }
+        reloadVideo()
+    }
+    
     func requestAuthorization() {
         PHPhotoLibrary.requestAuthorization { (status) in
             switch status {
@@ -57,6 +83,22 @@ class MainViewController: UIViewController {
                 break
             case .authorized:
                 break
+            }
+        }
+    }
+    
+    func reloadVideo() {
+        if let videoUrl = originalUrl {
+            if let frames = BoomerangEffect.createBoomerangFrom(videoUrl: videoUrl) {
+                // convert frames to video
+                FileConverter.convertImagesToMovie(name: ".temp_boomerang",
+                                                   images: frames,
+                                                   size: videoPlayer.bounds.size,
+                                                   fps: 30) { url in
+                                                    if url != nil {
+                                                        self.videoPlayer.setVideo(withUrl: url!)
+                                                    }
+                }
             }
         }
     }
