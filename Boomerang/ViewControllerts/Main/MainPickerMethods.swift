@@ -20,22 +20,15 @@ extension MainViewController: UINavigationControllerDelegate, UIImagePickerContr
         if let videoUrl = info["UIImagePickerControllerReferenceURL"] as? URL {
             if let frames = BoomerangEffect.createBoomerangFrom(videoUrl: videoUrl) {
                 // convert frames to video
-//                if let url = FileConverter.convertImagesToMovie(name: ".temp_boomerang",
-//                                                                images: frames,
-//                                                                size: videoPlayer.bounds.size,
-//                                                                fps: 30) {
-//                    print("dd:\(url)")
-//                }
                 FileConverter.convertImagesToMovie(name: ".temp_boomerang",
                                                    images: frames,
                                                    size: videoPlayer.bounds.size,
                                                    fps: 30) { url in
                                                     if url != nil {
-                                                        print("dd:\(url!)")
+                                                        self.videoPlayer.setVideo(withUrl: url!)
                                                     }
                 }
             }
-//            videoPlayer.setVideo(withUrl: videoUrl)
         }
         imagePicker.dismiss(animated: true, completion: nil)
     }

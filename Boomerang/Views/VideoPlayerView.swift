@@ -25,6 +25,11 @@ class VideoPlayerView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
+        // loop
+        NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: self.player.currentItem, queue: .main) { _ in
+            self.player.seek(to: kCMTimeZero)
+            self.player.play()
+        }
     }
     
     required init?(coder aDecoder: NSCoder) {

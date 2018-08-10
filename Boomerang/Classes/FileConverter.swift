@@ -63,7 +63,7 @@ class FileConverter {
         // Convert images to CGImage’s
         var buffer:CVPixelBuffer? = nil
         var frameCount:UInt = 0
-        let frameDuration:UInt = 5
+        let frameDuration:UInt = 3
         
         // if cgImage is nil frame will be ignored which leads to missing frames
         for img in images {
