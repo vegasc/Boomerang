@@ -41,7 +41,7 @@ extension MainViewController {
         let saveVideoButton = UIButton()
         view.addSubview(saveVideoButton)
         saveVideoButton.translatesAutoresizingMaskIntoConstraints = false
-        saveVideoButton.topAnchor.constraint(equalTo: videoPlayer.bottomAnchor, constant: 20).isActive = true
+        saveVideoButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20).isActive = true
         saveVideoButton.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0).isActive = true
         saveVideoButton.widthAnchor.constraint(equalToConstant: 200).isActive = true
         saveVideoButton.addTarget(self, action: #selector(saveVideoToCameraRoll), for: .touchUpInside)

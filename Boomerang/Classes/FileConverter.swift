@@ -96,9 +96,6 @@ class FileConverter {
             let videoOutputFileUrl = URL(fileURLWithPath: videoOutputPath.path)
             let outputFilePath = directory.appendingPathComponent(name + ".mov")
             let outputFileUrl = URL(fileURLWithPath: outputFilePath.path)
-            //        if FileManager.default.fileExists(atPath: outputFileUrl.path) {
-            //            try? FileManager.default.removeItem(atPath: outputFileUrl.path)
-            //        }
             
             // create asset
             let videoAsset = AVURLAsset(url: videoOutputFileUrl)

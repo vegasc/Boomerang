@@ -16,6 +16,7 @@ class MainViewController: UIViewController {
     
     // MARK: Properties
     var imagePicker = UIImagePickerController()
+    var speed = 30
 
     // MARK: Lifecycle funcs
     override func viewDidLoad() {
