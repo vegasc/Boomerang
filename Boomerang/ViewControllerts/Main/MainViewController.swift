@@ -33,6 +33,18 @@ class MainViewController: UIViewController {
         selectVideoFromLibrary()
     }
     
+    @objc func saveVideoToCameraRoll() {
+        if let url = self.videoPlayer.getVideoUrl() {
+            PHPhotoLibrary.shared().performChanges({
+                PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: url)
+            }) { (isSaved, error) in
+                if isSaved {
+                    self.showImageSavedAlert()
+                }
+            }
+        }
+    }
+    
     func requestAuthorization() {
         PHPhotoLibrary.requestAuthorization { (status) in
             switch status {

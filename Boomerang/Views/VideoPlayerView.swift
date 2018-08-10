@@ -20,6 +20,7 @@ class VideoPlayerView: UIView {
     
     // MARK: Proporties
     var player = AVPlayer()
+    private var videoUrl:URL? = nil
     
     // MARK: Override funcs
     override init(frame: CGRect) {
@@ -45,6 +46,11 @@ class VideoPlayerView: UIView {
     func setVideo(withUrl url:URL){
         self.player.replaceCurrentItem(with: AVPlayerItem(url: url))
         self.player.play()
+        self.videoUrl = url
+    }
+    
+    func getVideoUrl() -> URL? {
+        return self.videoUrl
     }
 }
 
