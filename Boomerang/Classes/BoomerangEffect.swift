@@ -46,6 +46,8 @@ class BoomerangEffect {
         
         // append reversed frames
         frames.append(contentsOf: frames.reversed())
+        frames.append(contentsOf: frames.reversed())
+        frames.append(contentsOf: frames.reversed())
         return frames
     }
     

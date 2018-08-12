@@ -22,7 +22,6 @@ extension MainViewController: UINavigationControllerDelegate, UIImagePickerContr
                 // convert frames to video
                 FileConverter.convertImagesToMovie(name: ".temp_boomerang",
                                                    images: frames,
-                                                   size: videoPlayer.bounds.size,
                                                    fps: 30) { url in
                                                     if url != nil {
                                                         self.originalUrl = videoUrl

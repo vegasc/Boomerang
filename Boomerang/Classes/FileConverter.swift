@@ -19,7 +19,6 @@ class FileConverter {
     */
     static func convertImagesToMovie(name:String,
                                      images:[UIImage],
-                                     size:CGSize,
                                      fps:UInt,
                                      complition:@escaping (_ url:URL?) -> Void) {
         // steps to convert
@@ -28,6 +27,8 @@ class FileConverter {
         // 3. Convert images to CGImage’s
         // 4. Finish AVAssetWriter session
         // 5. Export file with AVAssetExportSession
+        
+        let size = CGSize(width: 464, height: 848)
         
         // Setup output path
         guard let directory = FileManager.default.urls(for: .documentDirectory,
@@ -69,7 +70,7 @@ class FileConverter {
         for img in images {
             guard img.cgImage != nil else { continue }
             // TODO: Apply correct value
-            buffer = pixelBufferFromCGImage(ref: img.cgImage!, size: CGSize(width: 464, height: 848))
+            buffer = pixelBufferFromCGImage(ref: img.cgImage!, size: size)
             
             var isAppend = false
             var j = 0
@@ -144,7 +145,7 @@ class FileConverter {
         
         guard context != nil else { return nil }
         context!.concatenate(CGAffineTransform(rotationAngle: 0))
-        context!.draw(ref, in: CGRect.init(x: 0, y: 0, width: ref.width, height: ref.height))
+        context!.draw(ref, in: CGRect.init(x: 0, y: 0, width: size.width, height: size.height))
         
         CVPixelBufferUnlockBaseAddress(buffer!, CVPixelBufferLockFlags(rawValue: 0))
         
